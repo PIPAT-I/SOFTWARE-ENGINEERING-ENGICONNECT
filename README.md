@@ -1,9 +1,5 @@
 # Engi Connect — University Communication & Discussion Board
-
 A full-stack web application designed to facilitate communication, activity management, and student engagement within a university engineering faculty. Built as a Software Engineering course project.
-
-> **Live Demo:** [engiconnect.online](https://engiconnect.online)
-
 ---
 
 ## Features
