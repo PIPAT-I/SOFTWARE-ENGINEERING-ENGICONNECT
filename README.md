@@ -1,95 +1,188 @@
-# SE-TEAM-T21  ระบบสื่อสารและกระดานสนทนา (Engi Connect)
-## สมาชิกและระบบที่รับผิดชอบ
-<table border="1" style="border-collapse: collapse;border-radius: 10px;">
-  <thead style = "color:black; text-align:center;">
-    <tr>
-        <th rowspan = "2">รหัสนักศึกษา</th>
-        <th rowspan = "2">ชื่อ-นามสกุล</th>
-        <th colspan ="2">ระบบย่อย</th>
-    </tr>
-    <tr>
-        <th>ระบบย่อยที่1</th>
-        <th>ระบบย่อยที่2</th>
-    </tr>
-  </thead>
-  <tbody style="text-align:left;">
-    <tr>
-        <td>B6512866</td>
-        <td>นายเจษฎา เชือดขุนทด</td>
-        <td>ระบบคำร้องขอจัดตั้งทีมและโครงการ</td>
-        <td>ระบบลงทะเบียนและจัดการทีม</td>
-    </tr>
-    <tr>
-        <td>B6608347</td>
-        <td>นางสาวอรปรียา แตงอ่อน</td>
-        <td>ระบบประกาศผลและสรุปกิจกรรม</td>
-        <td>ระบบสะสมคะแนน</td>
-    </tr>
-    <tr>
-        <td>B6614690</td>
-        <td>นายพิพัฒน์ อินสวรรค์</td>
-        <td>ระบบโปรไฟล์ทักษะและความสนใจ</td>
-        <td>ระบบประเมินและความคิดเห็นกิจกรรม</td>
-    </tr>
-     <tr>
-        <td>B6614850</td>
-        <td>นายเทพประทาน หลิน</td>
-        <td>ระบบสื่อสารภายในกิจกรรม</td>
-        <td>ระบบคลังผลงานนักศึกษา</td>
-    </tr>
-     <tr>
-        <td>B6643508</td>
-        <td>นางสาวนิรชา มนต์ธนอาสน์</td>
-        <td>ระบบจัดการกิจกรรมและการแข่งขัน</td>
-        <td>ระบบรับรองผลการเข้าร่วมกิจกรรม</td>
-    </tr>    
-  </tbody>
-</table>
+# Engi Connect — University Communication & Discussion Board
 
+A full-stack web application designed to facilitate communication, activity management, and student engagement within a university engineering faculty. Built as a Software Engineering course project.
 
-## Document
-### สิ่งที่ต้องติดตั้งก่อนเริ่ม
-* [Docker](https://www.docker.com/) 
-* [Go](https://go.dev/doc/install) 
-* [Node.js](https://nodejs.org/en/download)
+> **Live Demo:** [engiconnect.online](https://engiconnect.online)
 
-### ขั้นตอนการใช้งาน
-1. เริ่มเชื่อมต่อฐานข้อมูลโดย PostgreSQL ต่อเข้ากับ docker compose
+---
+
+## Features
+
+### Authentication & User Management
+- JWT-based authentication with role-based access control (Admin / Student)
+- User registration and login with secure password handling
+
+### Real-Time Chat
+- WebSocket-powered instant messaging
+- Chat room / lobby system for group communication
+
+### Discussion Board (Posts)
+- Create, view, and manage discussion posts
+- Post status management and moderation by admins
+
+### Portfolio
+- Students can build and showcase personal portfolios
+- Portfolio review and approval workflow
+
+### Certificate Management
+- Upload and manage certificates earned from activities
+- Admin verification and approval system
+
+### Activity Registration & Events
+- Browse and register for university activities and events
+- Registration tracking and attendance management
+
+### Activity Evaluation
+- Evaluation forms with customizable scoring topics
+- Response collection and result analysis
+
+### Points & Rewards System
+- Earn points through activity participation
+- Redeem points for rewards managed by admins
+
+### Profile & Skills
+- Detailed user profiles with skills, interests, and social links
+- Faculty and major metadata support
+
+---
+
+## Tech Stack
+
+| Layer        | Technology                                        |
+| ------------ | ------------------------------------------------- |
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, Ant Design, Radix UI |
+| **Backend**  | Go (Gin Framework)                                |
+| **Database** | PostgreSQL 16                                     |
+| **Proxy**    | Nginx (reverse proxy with SSL/TLS)                |
+| **Auth**     | JWT (JSON Web Tokens)                             |
+| **Real-time**| WebSocket                                         |
+| **Infra**    | Docker, Docker Compose                            |
+| **SSL**      | Let's Encrypt (Certbot)                           |
+
+---
+
+## Architecture
+
 ```
-docker compose up -d 
-การตั้งค่า database อยู่ใน .env file 
-
+┌─────────────┐      ┌──────────────────┐      ┌────────────┐
+│   Browser    │─────▶│   Nginx (443)    │─────▶│  Frontend  │
+│              │      │  Reverse Proxy   │      │  (React)   │
+└─────────────┘      │                  │      └────────────┘
+                     │  /api/* ────────▶│      ┌────────────┐
+                     │                  │─────▶│  Backend   │
+                     └──────────────────┘      │  (Go/Gin)  │
+                                               └─────┬──────┘
+                                                     │
+                                               ┌─────▼──────┐
+                                               │ PostgreSQL  │
+                                               │    16       │
+                                               └─────────────┘
 ```
 
+---
 
-2. การใช้งาน backend 
+## Project Structure
+
 ```
-cd backend 
+team21/
+├── backend/              # Go backend API
+│   ├── config/           # Database & environment configuration
+│   ├── controller/       # HTTP request handlers
+│   ├── dto/              # Data Transfer Objects
+│   ├── entity/           # Database models (GORM)
+│   ├── middleware/       # CORS & auth middleware
+│   ├── routes/           # API route definitions
+│   ├── services/         # Business logic & WebSocket hub
+│   ├── test/             # Backend test files
+│   └── Dockerfile
+├── frontend/             # React + TypeScript SPA
+│   ├── src/
+│   │   ├── components/   # Reusable UI components
+│   │   ├── pages/        # Page views (admin, student, auth)
+│   │   ├── services/     # API client services (Axios)
+│   │   ├── interfaces/   # TypeScript type definitions
+│   │   ├── routes/       # React Router configuration
+│   │   ├── context/      # React context providers
+│   │   └── hooks/        # Custom React hooks
+│   └── Dockerfile
+├── nginx/                # Nginx configuration
+│   └── nginx.conf
+├── uat/                  # UAT test scripts (Python)
+├── compose.yaml          # Docker Compose (production)
+├── .env                  # Environment variables
+└── deploy.md             # Deployment guide
+```
+
+---
+
+## Quick Start (Development)
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/)
+- [Go 1.25+](https://go.dev/doc/install)
+- [Node.js 24+](https://nodejs.org/)
+
+### 1. Start the Database
+
+```bash
+docker compose up db -d
+```
+
+> Database configuration is managed via the `.env` file.
+
+### 2. Run the Backend
+
+```bash
+cd backend
 go run main.go
 ```
-Backend จะ run ที่ `http://localhost:8080`
 
-3. Run frontend 
-```
-cd frontend 
+Backend will be available at `http://localhost:8080`
+
+### 3. Run the Frontend
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
-Frontend จะ run ที่  `http://localhost:5173`
 
+Frontend will be available at `http://localhost:5173`
 
-### วิธีลบข้อมูล
-1.ทำการหยุดและลบ containers:
-```
-docker compose down 
+### Cleanup
 
-```
-2.ลบvolume ทิ้ง 
-```
+```bash
+# Stop and remove containers
+docker compose down
+
+# Stop, remove containers, AND delete database volumes
 docker compose down -v
-
 ```
-### Tech
-* **Backned** : Go
-* **Frontend** : React + TypeScprit + Vite 
-* **Database**: PostgreSQL 16
+
+---
+
+## Testing
+
+### Backend Unit Tests
+
+```bash
+cd backend
+go test ./test/...
+```
+
+### UAT (User Acceptance Testing)
+
+UAT scripts are located in the `uat/` directory (Python-based).
+
+---
+
+## Team
+
+**Team 21** — Software Engineering Course (SUT68)
+
+---
+
+## License
+
+This project was developed for educational purposes as part of a university course.
